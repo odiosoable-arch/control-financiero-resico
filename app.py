@@ -5,7 +5,7 @@ import datetime
 import hashlib
 
 # --- CONFIGURACIÓN DE PÁGINA ---
-st.set_page_config(page_title="Control Financiero RESICO", page_icon="💼", layout="wide")
+st.set_page_config(page_title="Control Financiero", page_icon="💼", layout="wide")
 
 # Estilos CSS
 st.markdown("""
@@ -44,7 +44,7 @@ if 'logged_in' not in st.session_state:
 
 if not st.session_state['logged_in']:
     st.markdown("<br><br>", unsafe_allow_html=True)
-    st.markdown("<h1 style='text-align: center;'>💼 Portal Empresarial RESICO</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center;'>💼 Portal Financiero</h1>", unsafe_allow_html=True)
     
     col1, col2, col3 = st.columns([1, 1.5, 1])
     with col2:
