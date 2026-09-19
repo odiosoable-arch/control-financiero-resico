@@ -116,8 +116,8 @@ if not st.session_state['logged_in']:
 is_admin = st.session_state['role'] == "admin"
 user_role_lower = str(st.session_state.get('role', '')).lower()
 
-# Permitir acceso al SAT tanto al Admin como a los Socios (el socio es el contador)
-puede_ver_sat = is_admin or ('socio' in user_role_lower) or ('contador' in user_role_lower)
+# Permitir acceso al SAT ÚNICAMENTE para Admin y Contador
+puede_ver_sat = is_admin or ('contador' in user_role_lower)
 
 # --- BARRA LATERAL ---
 st.sidebar.markdown(f"👤 **{st.session_state['email']}**")
@@ -236,7 +236,7 @@ else:
 
     # --- PESTAÑA 1 ---
     with get_tab("📊 Dashboard Fiscal"):
-        st.title(f"💼 Dashboard Fiscal RESICO ({'CEO' if is_admin else 'Socio'})")
+        st.title(f"💼 Dashboard Fiscal RESICO ({st.session_state['role'].upper()})")
         c1, c2, c3, c4 = st.columns(4)
         with c1: st.markdown(f"""<div class="metric-card" style="border-left: 4px solid #e74a3b;"><div class="metric-title">IVA Neto a Pagar</div><div class="metric-value" style="color: #e74a3b;">${iva_por_pagar:,.2f}</div></div>""", unsafe_allow_html=True)
         with c2: st.markdown(f"""<div class="metric-card" style="border-left: 4px solid #f6c23e;"><div class="metric-title">ISR Estimado (RESICO)</div><div class="metric-value" style="color: #f4b619;">${monto_isr:,.2f}</div></div>""", unsafe_allow_html=True)
@@ -792,11 +792,11 @@ else:
                         else:
                             st.warning("Selecciona un correo para eliminar.")
 
-    # --- PESTAÑA: CONEXIÓN SAT (ADMIN Y SOCIO/CONTADOR) ---
+    # --- PESTAÑA: CONEXIÓN SAT (SÓLO ADMIN Y CONTADOR) ---
     if puede_ver_sat:
         with get_tab("📥 Conexión SAT"):
             st.title("📥 Sincronización Directa con el SAT")
-            st.markdown("Módulo autorizado para Administrador y Socios/Contadores. Requiere la **e.firma (FIEL)** oficial. El sistema extrae automáticamente el RFC directamente de los sellos cargados.")
+            st.markdown("Módulo exclusivo para Administradores y Contadores. Requiere la **e.firma (FIEL)** oficial. El sistema extrae automáticamente el RFC directamente de los sellos cargados.")
 
             # Área de carga de credenciales
             st.markdown("### 🔐 Credenciales Fiscales (e.firma)")
@@ -881,7 +881,7 @@ else:
                                             "fecha_fin": str(fecha_fin),
                                             "tipo_solicitud": tipo_descarga,
                                             "estatus": "Pendiente",
-                                            "registrado_por": st.session_state.get("email", "socio/contador")
+                                            "registrado_por": st.session_state.get("email", "admin/contador")
                                         }).execute()
 
                                         st.success(f"✅ ¡Solicitud enviada al SAT con éxito para el RFC `{rfc_detectado}`! ID: `{id_solicitud_generado}`.")
